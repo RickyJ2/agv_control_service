@@ -38,7 +38,7 @@ wss.on('connection', function connection(ws, request, client) {
   ws.on('error', onSocketError);
 
   ws.on('message', function message(data) {
-    let [code, agvId, message] = data.split('-');
+    let [code, agvId, message] = data.toString().split('-');
     switch(code){
       case '01':
         console.log(`LIDAR Data from AGV ${agvId}: ${message}`);
@@ -58,6 +58,7 @@ wss.on('connection', function connection(ws, request, client) {
   });
 
   ws.on("close", function close() {
+    console.log("disconnected");
     if(request.url === '/agv'){
       listAGVClient = listAGVClient.filter(function(client) {
         return client !== ws;
