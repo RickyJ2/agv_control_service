@@ -6,7 +6,7 @@ function onSocketError(err) {
 }
 
 const server = createServer();
-const wss = new WebSocketServer({ noServer: true });
+const wss = new WebSocketServer({noServer: true });
 
 let listAGVClient = [];
 let listDashboardClient = [];
@@ -92,4 +92,6 @@ server.on('upgrade', function upgrade(request, socket, head) {
   });
 });
 
-server.listen(8080);
+server.listen(8080, "127.0.0.1", function(err){
+  console.log(err, server.address())
+});
