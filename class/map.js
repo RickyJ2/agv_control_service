@@ -1,5 +1,5 @@
 import {Hex, hexDirections} from './hex.js';
-
+import obs from '../listObstacles.js';
 class map{
  //19 x 16
     constructor(){
@@ -7,6 +7,7 @@ class map{
         this.width = 16
         this.height = 19;
         this.initMap();
+        this.setObstacles(obs);
     }
     initMap(){
         for(let y = - this.height; y <= 0; y++){
@@ -27,8 +28,11 @@ class map{
     }
     setObstacles(obstacles){
         obstacles.forEach(obstacle => {
-            this.addObstacle(obstacle.x, obstacle.y);
+            this.addObstacle(obstacle[0], obstacle[1]);
         });
+    }
+    getObstacles(){
+        return Object.values(this.map).filter(hex => !hex.walkable).map(hex => ({x: hex.x, y: hex.y}));
     }
     getWalkableNeighbors(hex){
         return hexDirections.map(direction => hex.neighbor(direction))

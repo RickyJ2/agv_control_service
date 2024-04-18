@@ -44,6 +44,18 @@ function notifyDashboard(message){
   });
 }
 
+function sendMap(client){
+  let msg = {
+    type: 'map',
+    data: {
+      "width": map.width,
+      "height": map.height,
+      "obs" : map.getObstacles()
+    }
+  }
+  client.send(JSON.stringify(msg));
+}
+
 const server = createServer();
 const wss = new WebSocketServer({noServer: true });
 
@@ -56,6 +68,8 @@ wss.on('connection', function connection(ws, request, client) {
   }else if(request.url === '/dashboard'){
     listDashboardClient.push(ws);
     console.log('Dashboard connected');
+    //send map
+    sendMap(ws);
     //run send msg to dashboard every 1s
     setInterval(function(){
       let msg = {
@@ -116,7 +130,6 @@ server.on('upgrade', function upgrade(request, socket, head) {
   // }
   wss.handleUpgrade(request, socket, head, function (ws) {
     wss.emit('connection', ws, request);
-    console.log("a new connection established");
   });
 });
 
