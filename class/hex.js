@@ -4,6 +4,10 @@ class Hex{
         this.y = y;
         this.z = -x - y;
         this.walkable = true;
+        this.parent = null;
+    }
+    key(){
+        return `${this.x},${this.y}`;
     }
     equals(hex){
         return this.x == hex.x && this.y == hex.y;
@@ -27,7 +31,7 @@ class Hex{
         return this.subtract(hex).length();
     }
     neighbor(direction){
-        return this.add(hexDirections[direction]);
+        return this.add(direction);
     }
 }
 
@@ -35,3 +39,9 @@ const hexDirections = [
     new Hex(1, 0), new Hex(1, -1), new Hex(0, -1),
     new Hex(-1, 0), new Hex(-1, 1), new Hex(0, 1)
 ];
+
+function hexDistance(dx, dy){
+    return (Math.abs(dx) + Math.abs(dy) + Math.abs(-dx-dy)) / 2;
+}
+
+export { Hex, hexDirections, hexDistance };
