@@ -1,6 +1,6 @@
 const obs = [
-    [23, -19],
-    [10, -12],
+    [0,0],
+    [0,0],
 ];
 
 export default obs;

@@ -21,6 +21,7 @@ class AGV {
         this.orientation = data.orientation;
         this.acceleration = data.acceleration;
         this.localMap = data.localMap;
+        console.log(this.localMap);
     }
     setWs(ws) {
         this.ws = ws;
