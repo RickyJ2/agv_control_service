@@ -8,11 +8,15 @@ class AGV {
         this.acceleration = { x: 0, y: 0 };
         this.localMap = null;
 
-        this.position = { x: 0, y: 0 };
+        this.position = { x: 2, y: -1 };
         this.ws = null;
 
         this.listGoalPoint = [];
         this.listPath = [];
+    }
+    addTask(goalPoint, path){
+        this.listGoalPoint.push(goalPoint);
+        this.listPath.push(path);
     }
     updateState(data){
         this.container = data.container;
@@ -21,7 +25,6 @@ class AGV {
         this.orientation = data.orientation;
         this.acceleration = data.acceleration;
         this.localMap = data.localMap;
-        console.log(this.localMap);
     }
     setWs(ws) {
         this.ws = ws;
