@@ -74,10 +74,10 @@ wss.on('connection', function connection(ws, request, client) {
     setInterval(function(){
       let msg = {
         type: 'update',
-        data: {
-          '1': listAGVClient['1'].getState(),
-          '2': listAGVClient['2'].getState()
-        }
+        data: [
+          listAGVClient['1'].getState(),
+          listAGVClient['2'].getState()
+        ]
       }
       notifyDashboard(JSON.stringify(msg));
     }, 1000);
@@ -89,6 +89,7 @@ wss.on('connection', function connection(ws, request, client) {
     if(request.url === '/agv'){
       data = JSON.parse(data.toString());
       listAGVClient[userId].updateState(data);
+      listAGVClient[userId].setPosition(map.localization(data.localMap));
     }else if(request.url === '/dashboard'){
       let msg = JSON.parse(data.toString());
       if(msg.type === "task"){
