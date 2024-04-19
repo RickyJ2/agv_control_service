@@ -10,9 +10,9 @@ class map{
         this.setObstacles(obs);
     }
     initMap(){
-        for(let y = - this.height; y <= 0; y++){
+        for(let y = - this.height + 1; y <= 0; y++){
             let r_offset = Math.floor(y / 2.0);
-            for(let x = -1 * r_offset; x <= this.width - r_offset; x++){
+            for(let x = -1 * r_offset; x < this.width - r_offset; x++){
                 const hex = new Hex(x, y);
                 this.map[hex.key()] = hex;
             }
@@ -42,6 +42,9 @@ class map{
         const newMap = new map();
         newMap.map = Object.assign({}, this.map);
         return newMap;
+    }
+    localization(data){
+        
     }
 }
 
