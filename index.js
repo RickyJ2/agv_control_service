@@ -101,9 +101,14 @@ wss.on('connection', function connection(ws, request, client) {
         let path = finder.findPath(start.x, start.y, end.x, end.y, map.clone());
         let NewMsg = {
           type: 'path',
-          data: path
+          data: {
+            "path": path,
+            "goal": goal
+          }
         }
         notifyAGV(JSON.stringify(NewMsg), agvId);
+      }else if(msg.type === "map"){
+        sendMap(ws);
       }
     }
   });
