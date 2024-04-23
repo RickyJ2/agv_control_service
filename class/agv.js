@@ -30,7 +30,7 @@ class AGV {
         this.ws = ws;
     }
     setPosition(x, y) {
-        this.position = { x, y };
+        this.position = {x: x, y: y };
     }
     getState(){
         return {

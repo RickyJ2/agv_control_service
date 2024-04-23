@@ -108,7 +108,7 @@ wss.on('connection', function connection(ws, request, client) {
       }else if(msg.type == "notif"){
         console.log("new point reached");
         if(msg.data === "point"){
-          let point = listAGVClient[userId].listPath.shift();
+          let point = listAGVClient[userId].listPath[0].shift();
           listAGVClient[userId].setPosition(point[0], point[1]);
           let sendMsg = {
             "type": "stop"
@@ -127,6 +127,7 @@ wss.on('connection', function connection(ws, request, client) {
         let start = map.getHexAt(listAGVClient[agvId].position.x, listAGVClient[agvId].position.y);
         let end = map.getHexAt(goal.x, goal.y);
         let path = finder.findPath(start.x, start.y, end.x, end.y, map.clone());
+        path.shift(); //remove start point
         listAGVClient[agvId].addTask(goal, path);
         path = path.map(node => ([node[0] - start.x, node[1] - start.y]));
         let NewMsg = {
