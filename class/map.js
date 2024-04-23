@@ -4,8 +4,8 @@ class map{
  //19 x 16
     constructor(){
         this.map = {};
-        this.width = 16
-        this.height = 19;
+        this.width = 4
+        this.height = 6;
         this.initMap();
         this.setObstacles(obs);
     }
@@ -24,6 +24,7 @@ class map{
     }
     addObstacle(x, y){
         const hex = this.getHexAt(x, y);
+        if (hex == null) return;
         hex.walkable = false;
     }
     setObstacles(obstacles){

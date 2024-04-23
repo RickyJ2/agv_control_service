@@ -5,8 +5,8 @@ import Map from './class/map.js';
 import aStarFinder from './class/aStarFinder.js';
 
 let listAGVClient = {
-  '1': new AGV(1),
-  '2': new AGV(2),
+  '1': new AGV(1, {x: 0, y: 0}),
+  '2': new AGV(2, {x: 0, y: 0}),
 };
 let listDashboardClient = [];
 let map = new Map();
@@ -40,6 +40,14 @@ function notifyDashboard(message){
   listDashboardClient.forEach(function each(client) {
     if (client.readyState === WebSocket.OPEN) {
       client.send(message);
+    }
+  });
+}
+
+function sendMapToAll(){
+  listDashboardClient.forEach(function each(client) {
+    if (client.readyState === WebSocket.OPEN) {
+      sendMap(client);
     }
   });
 }
@@ -87,9 +95,29 @@ wss.on('connection', function connection(ws, request, client) {
 
   ws.on('message', function message(data) {
     if(request.url === '/agv'){
-      data = JSON.parse(data.toString());
-      listAGVClient[userId].updateState(data);
-      listAGVClient[userId].setPosition(map.localization(data.localMap));
+      let msg = JSON.parse(data.toString());
+      if(msg.type === "state"){
+        listAGVClient[userId].updateState(msg.data);
+        // console.log(msg.data.localMap)
+        // for(let point in msg.data.localMap){
+        //   let x = parseInt(point.x) + listAGVClient[userId].position.x;
+        //   let y = parseInt(point.y) + listAGVClient[userId].position.y;
+        //   map.addObstacle(x, y);
+        // }
+        // sendMapToAll();
+      }else if(msg.type == "notif"){
+        console.log("new point reached");
+        if(msg.data === "point"){
+          let point = listAGVClient[userId].listPath.shift();
+          listAGVClient[userId].setPosition(point[0], point[1]);
+          let sendMsg = {
+            "type": "stop"
+          }
+          notifyAGV(JSON.stringify(sendMsg), userId);
+        }
+      }else if(msg.type == "goal"){ 
+        listAGVClient[userId].listGoalPoint.shift();
+      }
     }else if(request.url === '/dashboard'){
       let msg = JSON.parse(data.toString());
       if(msg.type === "task"){

@@ -1,5 +1,5 @@
 class AGV {
-    constructor(id) {
+    constructor(id, position) {
         this.id = id;
         this.container = false;
         this.collision = false;
@@ -8,7 +8,7 @@ class AGV {
         this.acceleration = { x: 0, y: 0 };
         this.localMap = null;
 
-        this.position = { x: 2, y: -1 };
+        this.position = position;
         this.ws = null;
 
         this.listGoalPoint = [];
