@@ -59,7 +59,7 @@ function sendMap(client){
       "width": map.width,
       "height": map.height,
       "obs" : map.getObstacles()
-    }
+    }   
   }
   client.send(JSON.stringify(msg));
 }
@@ -98,35 +98,40 @@ wss.on('connection', function connection(ws, request, client) {
       let msg = JSON.parse(data.toString());
       if(msg.type === "state"){
         listAGVClient[userId].updateState(msg.data);
-        // console.log(msg.data.localMap)
-        // for(let point in msg.data.localMap){
-        //   let x = parseInt(point.x) + listAGVClient[userId].position.x;
-        //   let y = parseInt(point.y) + listAGVClient[userId].position.y;
-        //   map.addObstacle(x, y);
-        // }
-        // sendMapToAll();
+        msg.data.localMap.forEach(point => {
+          let x = point.x + listAGVClient[userId].position.x;
+          let y = point.y + listAGVClient[userId].position.y;
+          map.addObstacle(x, y);
+        });
+        sendMapToAll();
       }else if(msg.type == "notif"){
-        console.log("new point reached");
         if(msg.data === "point"){
           let point = listAGVClient[userId].listPath[0].shift();
           listAGVClient[userId].setPosition(point[0], point[1]);
+          if(listAGVClient[userId].listPath[0].length == 0){
+            listAGVClient[userId].listPath.shift();
+            listAGVClient[userId].listGoalPoint.shift();
+          }
+          console.log("reached point: ", point);
+          console.log("current list Path: ", listAGVClient[userId].listPath);
+          console.log("current list goal: ", listAGVClient[userId].listGoalPoint);
           let sendMsg = {
             "type": "stop"
           }
           notifyAGV(JSON.stringify(sendMsg), userId);
         }
-      }else if(msg.type == "goal"){ 
-        listAGVClient[userId].listGoalPoint.shift();
       }
     }else if(request.url === '/dashboard'){
       let msg = JSON.parse(data.toString());
       if(msg.type === "task"){
+        console.log("received task ", msg.data);
         let agvId = msg.data.id;
         let goal = msg.data.goal;
         //generatePath for AGV
         let start = map.getHexAt(listAGVClient[agvId].position.x, listAGVClient[agvId].position.y);
         let end = map.getHexAt(goal.x, goal.y);
         let path = finder.findPath(start.x, start.y, end.x, end.y, map.clone());
+        console.log("generated path: ", path)
         path.shift(); //remove start point
         listAGVClient[agvId].addTask(goal, path);
         path = path.map(node => ([node[0] - start.x, node[1] - start.y]));
