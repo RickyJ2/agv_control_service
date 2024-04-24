@@ -5,7 +5,7 @@ import Map from './class/map.js';
 import aStarFinder from './class/aStarFinder.js';
 
 let listAGVClient = {
-  '1': new AGV(1, {x: 0, y: 0}),
+  '1': new AGV(1, {x: 3, y: -1}),
   '2': new AGV(2, {x: 0, y: 0}),
 };
 let listDashboardClient = [];
@@ -33,6 +33,14 @@ function notifyAGV(message, agvId){
       client.send(message);
     }
   });
+}
+
+function sendAGVPosition(agvId){
+  let msg = {
+    type: 'position',
+    data: listAGVClient[agvId].position
+  };
+  notifyAGV(JSON.stringify(msg), agvId);
 }
 
 function notifyDashboard(message){
@@ -73,6 +81,7 @@ wss.on('connection', function connection(ws, request, client) {
   if(request.url === '/agv'){
     listAGVClient[userId].setWs(ws);
     console.log('AGV ' + userId + ' connected');
+    sendAGVPosition(userId);
   }else if(request.url === '/dashboard'){
     listDashboardClient.push(ws);
     console.log('Dashboard connected');
