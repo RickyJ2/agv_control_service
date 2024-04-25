@@ -114,7 +114,6 @@ wss.on('connection', function connection(ws, request, client) {
           let y = point.y + listAGVClient[userId].position.y;
           map.addObstacle(x, y);
         });
-        console.log(msg.data.localMap)
         sendMapToAll();
       }else if(msg.type == "notif"){
         if(msg.data === "point"){
@@ -144,6 +143,10 @@ wss.on('connection', function connection(ws, request, client) {
         //generatePath for AGV
         console.log("when generating path: ", listAGVClient[agvId].position, " to ", goal)
         let start = map.getHexAt(listAGVClient[agvId].position.x, listAGVClient[agvId].position.y);
+        if(listAGVClient[agvId].listGoalPoint.length > 0){
+          let index = listAGVClient[agvId].listGoalPoint.length - 1;
+          start = map.getHexAt(listAGVClient[agvId].listGoalPoint[index][0], listAGVClient[agvId].listGoalPoint[index][0]);
+        }
         let end = map.getHexAt(goal.x, goal.y);
         let path = finder.findPath(start.x, start.y, end.x, end.y, map.clone());
         console.log("generated path: ", path)
