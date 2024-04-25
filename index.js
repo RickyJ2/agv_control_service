@@ -141,12 +141,12 @@ wss.on('connection', function connection(ws, request, client) {
         let agvId = msg.data.id;
         let goal = msg.data.goal;
         //generatePath for AGV
-        console.log("when generating path: ", listAGVClient[agvId].position, " to ", goal)
         let start = map.getHexAt(listAGVClient[agvId].position.x, listAGVClient[agvId].position.y);
         if(listAGVClient[agvId].listGoalPoint.length > 0){
           let index = listAGVClient[agvId].listGoalPoint.length - 1;
-          start = map.getHexAt(listAGVClient[agvId].listGoalPoint[index][0], listAGVClient[agvId].listGoalPoint[index][0]);
+          start = map.getHexAt(listAGVClient[agvId].listGoalPoint[index].x, listAGVClient[agvId].listGoalPoint[index].y);
         }
+        console.log("when generating path: ", start, " to ", goal)
         let end = map.getHexAt(goal.x, goal.y);
         let path = finder.findPath(start.x, start.y, end.x, end.y, map.clone());
         console.log("generated path: ", path)
