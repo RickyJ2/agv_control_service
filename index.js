@@ -28,6 +28,10 @@ function notifyAGV(message, agvId){
   //For targeted AGV id
   if(agvId != 0){
     let client = listAGVClient[agvId].ws;
+    if(client == null){
+      console.log("AGV not connected");
+      return;
+    }
     if (client.readyState === WebSocket.OPEN) {
       client.send(message);
     }
@@ -148,6 +152,10 @@ wss.on('connection', function connection(ws, request, client) {
         }
         console.log("when generating path: ", start, " to ", goal)
         let end = map.getHexAt(goal.x, goal.y);
+        if(end == null){
+          console.log("goal is invalid");
+          return;
+        }
         let path = finder.findPath(start.x, start.y, end.x, end.y, map.clone());
         console.log("generated path: ", path)
         path.shift(); //remove start point
