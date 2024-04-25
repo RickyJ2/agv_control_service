@@ -16,6 +16,14 @@ function onSocketError(err) {
   console.error(err);
 }
 
+function sendAGVPosition(agvId){
+  let msg = {
+    type: 'position',
+    data: listAGVClient[agvId].position
+  };
+  notifyAGV(JSON.stringify(msg), agvId);
+}
+
 function notifyAGV(message, agvId){
   //For targeted AGV id
   if(agvId != 0){
@@ -35,14 +43,6 @@ function notifyAGV(message, agvId){
   });
 }
 
-function sendAGVPosition(agvId){
-  let msg = {
-    type: 'position',
-    data: listAGVClient[agvId].position
-  };
-  notifyAGV(JSON.stringify(msg), agvId);
-}
-
 function notifyDashboard(message){
   //broadcast to all Dashboard
   listDashboardClient.forEach(function each(client) {
@@ -58,7 +58,7 @@ function sendMapToAll(){
       sendMap(client);
     }
   });
-}
+};
 
 function sendMap(client){
   let msg = {
@@ -69,6 +69,7 @@ function sendMap(client){
       "obs" : map.getObstacles()
     }   
   }
+  // console.log("sending map: ", msg.data)
   client.send(JSON.stringify(msg));
 }
 
@@ -107,16 +108,20 @@ wss.on('connection', function connection(ws, request, client) {
       let msg = JSON.parse(data.toString());
       if(msg.type === "state"){
         listAGVClient[userId].updateState(msg.data);
+        map.clearMap()
         msg.data.localMap.forEach(point => {
           let x = point.x + listAGVClient[userId].position.x;
           let y = point.y + listAGVClient[userId].position.y;
           map.addObstacle(x, y);
         });
+        console.log(msg.data.localMap)
         sendMapToAll();
       }else if(msg.type == "notif"){
         if(msg.data === "point"){
           let point = listAGVClient[userId].listPath[0].shift();
           listAGVClient[userId].setPosition(point[0], point[1]);
+          console.log("AGV updated Position: ",listAGVClient[userId].position)
+          sendAGVPosition(userId);
           if(listAGVClient[userId].listPath[0].length == 0){
             listAGVClient[userId].listPath.shift();
             listAGVClient[userId].listGoalPoint.shift();
@@ -124,10 +129,10 @@ wss.on('connection', function connection(ws, request, client) {
           console.log("reached point: ", point);
           console.log("current list Path: ", listAGVClient[userId].listPath);
           console.log("current list goal: ", listAGVClient[userId].listGoalPoint);
-          let sendMsg = {
-            "type": "stop"
-          }
-          notifyAGV(JSON.stringify(sendMsg), userId);
+          // let sendMsg = {
+          //   "type": "stop"
+          // }
+          // notifyAGV(JSON.stringify(sendMsg), userId);
         }
       }
     }else if(request.url === '/dashboard'){
@@ -137,6 +142,7 @@ wss.on('connection', function connection(ws, request, client) {
         let agvId = msg.data.id;
         let goal = msg.data.goal;
         //generatePath for AGV
+        console.log("when generating path: ", listAGVClient[agvId].position, " to ", goal)
         let start = map.getHexAt(listAGVClient[agvId].position.x, listAGVClient[agvId].position.y);
         let end = map.getHexAt(goal.x, goal.y);
         let path = finder.findPath(start.x, start.y, end.x, end.y, map.clone());

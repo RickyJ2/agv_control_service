@@ -41,7 +41,8 @@ class AGV {
             power: this.power,
             orientation: this.orientation,
             acceleration: this.acceleration,
-            position: this.position
+            position: this.position,
+            paths: this.listPath
         }
     }
     isOnline(){
