@@ -112,13 +112,13 @@ wss.on('connection', function connection(ws, request, client) {
       let msg = JSON.parse(data.toString());
       if(msg.type === "state"){
         listAGVClient[userId].updateState(msg.data);
-        map.clearMap()
-        msg.data.localMap.forEach(point => {
-          let x = point.x + listAGVClient[userId].position.x;
-          let y = point.y + listAGVClient[userId].position.y;
-          map.addObstacle(x, y);
-        });
-        sendMapToAll();
+        // map.clearMap()
+        // msg.data.localMap.forEach(point => {
+        //   let x = point.x + listAGVClient[userId].position.x;
+        //   let y = point.y + listAGVClient[userId].position.y;
+        //   map.addObstacle(x, y);
+        // });
+        // sendMapToAll();
       }else if(msg.type == "notif"){
         if(msg.data === "point"){
           let point = listAGVClient[userId].listPath[0].shift();
@@ -137,6 +137,31 @@ wss.on('connection', function connection(ws, request, client) {
           // }
           // notifyAGV(JSON.stringify(sendMsg), userId);
         }
+      }else if(msg.type === "collision"){
+        console.log("collision detected");
+        msg.data.localMap.forEach(point => {
+          let x = point.x + listAGVClient[userId].position.x;
+          let y = point.y + listAGVClient[userId].position.y;
+          map.addObstacle(x, y);
+          console.log("add obstacle at: ", x, y)
+        });
+        sendMapToAll();
+        let start = map.getHexAt(listAGVClient[userId].position.x, listAGVClient[userId].position.y);
+        let end = map.getHexAt(listAGVClient[userId].listGoalPoint[0].x, listAGVClient[userId].listGoalPoint[0].y);
+        console.log("when generating path: ", start, " to ", end)
+        let path = finder.findPath(start.x, start.y, end.x, end.y, map.clone());
+        path.shift(); //remove start point
+        listAGVClient[userId].listPath.shift();
+        listAGVClient[userId].listPath.unshift(path);
+        path = path.map(node => ([node[0] - start.x, node[1] - start.y]));  
+        let NewMsg = {
+          type: 'new path',
+          data: {
+            "path": path,
+            "goal": listAGVClient[userId].listGoalPoint[0]
+          }
+        }
+        notifyAGV(JSON.stringify(NewMsg), userId);
       }
     }else if(request.url === '/dashboard'){
       let msg = JSON.parse(data.toString());
