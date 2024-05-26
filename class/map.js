@@ -1,4 +1,4 @@
-import {Hex, hexDirections} from './hex.js';
+import {Hex, hexDirections, hexDistance} from './hex.js';
 import obs from '../listObstacles.js';
 class map{
  //19 x 16
@@ -8,6 +8,7 @@ class map{
         this.height = 7;
         this.initMap();
         this.setObstacles(obs);
+        this.prev = [];
     }
     initMap(){
         for(let y = (-1*this.height) + 1; y <= 0; y++){
@@ -39,17 +40,32 @@ class map{
     getObstacles(){
         return Object.values(this.map).filter(hex => !hex.walkable).map(hex => ({x: hex.x, y: hex.y}));
     }
+    getNeigbors(hex){
+        return hexDirections.map(direction => hex.neighbor(direction))
+            .filter(neighbor => this.map[neighbor.key()]); 
+    }
     getWalkableNeighbors(hex){
         return hexDirections.map(direction => hex.neighbor(direction))
             .filter(neighbor => this.map[neighbor.key()] && this.map[neighbor.key()]?.walkable);
+    }
+    getWalkableNeighborsUnreserved(hex){
+        return hexDirections.map(direction => hex.neighbor(direction))
+            .filter(neighbor => this.map[neighbor.key()] && this.map[neighbor.key()]?.walkable && this.map[neighbor.key()]?.reserve == false);
     }
     clone(){
         const newMap = new map();
         newMap.map = Object.assign({}, this.map);
         return newMap;
     }
-    localization(data){
-        
+    setGridReserved(listHex){
+        for(let hex of listHex){
+            this.map[hex.key()].reserve = true;
+        }
+    }
+    setGridUnreserved(listHex){
+        for(let hex of listHex){
+            this.map[hex.key()].reserve = false;
+        }
     }
 }
 

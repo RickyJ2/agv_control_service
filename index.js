@@ -2,11 +2,11 @@ import { createServer } from 'http';
 import WebSocket, { WebSocketServer } from 'ws';
 import AGV from './class/agv.js';
 import Map from './class/map.js';
-import aStarFinder from './class/aStarFinder.js';
+import aStarFinder from './class/aStzarFinder.js';
 
 let listAGVClient = {
-  '1': new AGV(1, {x: 3, y: -1}),
-  '2': new AGV(2, {x: 0, y: 0}),
+  '1': new AGV(1, {x: 0, y: 0}),
+  '2': new AGV(2, {x: 3, y: -1}),
 };
 let listDashboardClient = [];
 let map = new Map();
@@ -129,6 +129,7 @@ wss.on('connection', function connection(ws, request, client) {
             listAGVClient[userId].listPath.shift();
             listAGVClient[userId].listGoalPoint.shift();
           }
+          map.setGridUnreserved([point]);
           console.log("reached point: ", point);
           console.log("current list Path: ", listAGVClient[userId].listPath);
           console.log("current list goal: ", listAGVClient[userId].listGoalPoint);
@@ -185,6 +186,7 @@ wss.on('connection', function connection(ws, request, client) {
         console.log("generated path: ", path)
         path.shift(); //remove start point
         listAGVClient[agvId].addTask(goal, path);
+        map.setGridReserved(path);
         path = path.map(node => ([node[0] - start.x, node[1] - start.y]));
         let NewMsg = {
           type: 'path',
