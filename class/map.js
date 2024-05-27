@@ -57,13 +57,15 @@ class map{
         newMap.map = Object.assign({}, this.map);
         return newMap;
     }
-    setGridReserved(listHex){
-        for(let hex of listHex){
+    setGridReserved(listPoint){
+        for(let point of listPoint){
+            const hex = this.getHexAt(point[0], point[1]);
             this.map[hex.key()].reserve = true;
         }
     }
-    setGridUnreserved(listHex){
-        for(let hex of listHex){
+    setGridUnreserved(listPoint){
+        for(let point of listPoint){
+            const hex = this.getHexAt(point[0], point[1]);
             this.map[hex.key()].reserve = false;
         }
     }

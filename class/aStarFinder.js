@@ -27,7 +27,7 @@ class aStarFinder{
             if(node.equals(endNode)){
                 return backtrace(node);
             }
-            neighbors = grid.getWalkableNeighborsUnreserved(node);
+            neighbors = grid.getWalkableNeighbors(node);
             for(let i = 0, l = neighbors.length; i < l; ++i){
                 neighbor = neighbors[i];
                 if(neighbor.closed){

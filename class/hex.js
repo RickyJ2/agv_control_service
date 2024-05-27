@@ -4,6 +4,7 @@ class Hex{
         this.y = y;
         this.z = -x - y;
         this.walkable = true;
+        this.reserve = false;
         this.parent = null;
     }
     key(){
@@ -32,6 +33,9 @@ class Hex{
     }
     neighbor(direction){
         return this.add(direction);
+    }
+    toString(){
+        return `Hex(${this.x}, ${this.y})`;
     }
 }
 
