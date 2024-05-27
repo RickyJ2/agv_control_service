@@ -34,6 +34,12 @@ class Hex{
     neighbor(direction){
         return this.add(direction);
     }
+    clone(){
+        let newHex = new Hex(this.x, this.y);
+        newHex.walkable = this.walkable;
+        newHex.reserve = this.reserve;
+        return newHex;
+    }
     toString(){
         return `Hex(${this.x}, ${this.y})`;
     }

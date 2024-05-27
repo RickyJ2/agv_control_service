@@ -35,7 +35,7 @@ class aStarFinder{
                 }
                 x = neighbor.x;
                 y = neighbor.y;
-                ng = node.g + 1;
+                ng = node.g + (neighbor.reserve ? 5 : 1);
 
                 if(!neighbor.opened || ng < neighbor.g){
                     neighbor.g = ng;

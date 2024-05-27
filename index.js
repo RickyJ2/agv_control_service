@@ -5,14 +5,16 @@ import Map from './class/map.js';
 import aStarFinder from './class/aStarFinder.js';
 import logging from './class/logging.js';
 
-let log = new logging();
-let listAGVClient = {
+const log = new logging();
+const listAGVClient = {
   '1': new AGV(1, {x: 0, y: 0}),
-  '2': new AGV(2, {x: 3, y: -1}),
+  '2': new AGV(2, {x: 2, y: -1}),
 };
 let listDashboardClient = [];
-let map = new Map();
-let finder = new aStarFinder();
+const map = new Map();
+const finder = new aStarFinder();
+const server = createServer();
+const wss = new WebSocketServer({noServer: true });
 
 function onSocketError(err) {
   log.error([err]);
@@ -26,25 +28,22 @@ function sendAGVPosition(agvId){
   notifyAGV(JSON.stringify(msg), agvId);
 }
 
-function notifyAGV(message, agvId){
+function notifyAGV(message, agvId = null){
   //For targeted AGV id
-  if(agvId != 0){
-    let client = listAGVClient[agvId].ws;
-    if(client == null){
+  if(agvId != null){
+    if(listAGVClient[agvId].ws == null){
       log.error(["AGV not connected"]);
       return;
     }
-    if (client.readyState === WebSocket.OPEN) {
-      client.send(message);
+    if (listAGVClient[agvId].ws.readyState === WebSocket.OPEN) {
+      listAGVClient[agvId].ws.send(message);
     }
     return;
   }
   //broadcast to all AGV
-  let listAGV = listAGVClient.keys();
-  listAGV.forEach(function each(agvId) {
-    let client = listAGVClient[agvId].ws;
-    if (client.readyState === WebSocket.OPEN) {
-      client.send(message);
+  listAGVClient.keys().forEach(function each(agvId) {
+    if (listAGVClient[agvId].ws.readyState === WebSocket.OPEN) {
+      listAGVClient[agvId].ws.send(message);
     }
   });
 }
@@ -78,9 +77,6 @@ function sendMap(client){
   client.send(JSON.stringify(msg));
 }
 
-const server = createServer();
-const wss = new WebSocketServer({noServer: true });
-
 wss.on('connection', function connection(ws, request, client) {
   const userId = request.headers['id'];
   switch(request.url){
@@ -105,10 +101,9 @@ wss.on('connection', function connection(ws, request, client) {
         }
         notifyDashboard(JSON.stringify(msg));
       }, 1000);
+      break;
     }
   }
-
-  ws.on('error', onSocketError);
 
   ws.on('message', function message(data) {
     let msg = JSON.parse(data.toString());
@@ -122,14 +117,14 @@ wss.on('connection', function connection(ws, request, client) {
           case("notif"):{
             let point = listAGVClient[userId].listPath[0].shift();
             listAGVClient[userId].setPosition(point[0], point[1]);
-            log.info(["AGV updated Position: " + listAGVClient[userId].position.x + ", " + listAGVClient[userId].position.y]); 
+            log.info(["AGV updated Position: ", listAGVClient[userId].position]); 
             sendAGVPosition(userId);
             if(listAGVClient[userId].listPath[0].length == 0){
               listAGVClient[userId].listPath.shift();
               listAGVClient[userId].listGoalPoint.shift();
             }
             map.setGridUnreserved([point]);
-            log.info(["reached point: " + point[0] + ", " + point[1]]);
+            log.info(["reached point: ", point]);
             log.info(["current list Path: ", listAGVClient[userId].listPath]);
             log.info(["current list goal: ", listAGVClient[userId].listGoalPoint]);
             break;
@@ -190,7 +185,8 @@ wss.on('connection', function connection(ws, request, client) {
             log.info(["generated path: ", path]);
             path.shift(); //remove start point
             listAGVClient[agvId].addTask(goal, path);
-            map.setGridReserved(path);
+            map.setGridReserved(path.slice(0, path.length - 1));
+            log.info(["current reserve grid: ", map.getReserveGrid()]);
             path = path.map(node => ([node[0] - start.x, node[1] - start.y]));
             let NewMsg = {
               type: 'path',
@@ -211,6 +207,8 @@ wss.on('connection', function connection(ws, request, client) {
       }
     }
   });
+
+  ws.on('error', onSocketError);
 
   ws.on("close", function close() {
     switch(request.url){

@@ -45,17 +45,18 @@ class map{
             .filter(neighbor => this.map[neighbor.key()]); 
     }
     getWalkableNeighbors(hex){
+        //return from the grid from the hex
         return hexDirections.map(direction => hex.neighbor(direction))
-            .filter(neighbor => this.map[neighbor.key()] && this.map[neighbor.key()]?.walkable);
-    }
-    getWalkableNeighborsUnreserved(hex){
-        return hexDirections.map(direction => hex.neighbor(direction))
-            .filter(neighbor => this.map[neighbor.key()] && this.map[neighbor.key()]?.walkable && this.map[neighbor.key()]?.reserve == false);
+            .filter(neighbor => this.map[neighbor.key()] && this.map[neighbor.key()]?.walkable)
+            .map(neighbor => this.map[neighbor.key()].clone());
     }
     clone(){
         const newMap = new map();
         newMap.map = Object.assign({}, this.map);
         return newMap;
+    }
+    getReserveGrid(){
+        return Object.values(this.map).filter(hex => hex.reserve).map(hex => ({x: hex.x, y: hex.y}));
     }
     setGridReserved(listPoint){
         for(let point of listPoint){
