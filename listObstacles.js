@@ -1,3 +1,5 @@
+//fill with format [x,y] where the obstacle is located based on axial coordinate system
+//look https://www.redblobgames.com/grids/hexagons/#coordinates
 const obs = [
     // [5, -2],
     [4, -2],
