@@ -9,7 +9,7 @@ class AGV {
         this.localMap = null;
 
         this.position = position;
-        this.ws = 1;
+        this.ws = null;
 
         this.listGoalPoint = [];
         this.listPath = [];
