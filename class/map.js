@@ -1,5 +1,6 @@
 import {Hex, hexDirections, hexDistance} from './hex.js';
-import obs from '../listObstacles.js';
+import {listObs} from "../config.js";
+
 class map{
  //19 x 16
     constructor(){
@@ -7,7 +8,7 @@ class map{
         this.width = 6;
         this.height = 8;
         this.initMap();
-        this.setObstacles(obs);
+        this.setObstacles(listObs);
         this.prev = [];
     }
     initMap(){
