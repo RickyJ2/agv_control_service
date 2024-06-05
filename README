@@ -1,2 +1,3 @@
 1. Run "npm install" to make sure all depedencies installed
-2. Run "npm run dev" to run the server
+2. Run "npm run dev" to run the server with nodemon
+2. Run "npm run start" to run the server without nodemon
