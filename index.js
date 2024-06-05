@@ -8,7 +8,7 @@ import logging from './class/logging.js';
 const log = new logging();
 const listAGVClient = {
   '1': new AGV(1, {x: 0, y: 0}),
-  '2': new AGV(2, {x: 2, y: -1}),
+  '2': new AGV(2, {x: 0, y: 0}),
 };
 let listDashboardClient = [];
 const map = new Map();
@@ -35,14 +35,14 @@ function notifyAGV(message, agvId = null){
       log.error(["AGV not connected"]);
       return;
     }
-    if (listAGVClient[agvId].ws.readyState === WebSocket.OPEN) {
+    if(listAGVClient[agvId].ws.readyState === WebSocket.OPEN){
       listAGVClient[agvId].ws.send(message);
     }
     return;
   }
   //broadcast to all AGV
   listAGVClient.keys().forEach(function each(agvId) {
-    if (listAGVClient[agvId].ws.readyState === WebSocket.OPEN) {
+    if(listAGVClient[agvId].ws.readyState === WebSocket.OPEN){
       listAGVClient[agvId].ws.send(message);
     }
   });
@@ -165,7 +165,7 @@ wss.on('connection', function connection(ws, request, client) {
             log.info(["received task ", msg.data]);
             let agvId = msg.data.id;
             let goal = msg.data.goal;
-            //generatePath for AGV
+            //generate Path for AGV
             let start = map.getHexAt(listAGVClient[agvId].position.x, listAGVClient[agvId].position.y);
             if(listAGVClient[agvId].listGoalPoint.length > 0){
               let index = listAGVClient[agvId].listGoalPoint.length - 1;
@@ -187,7 +187,7 @@ wss.on('connection', function connection(ws, request, client) {
             listAGVClient[agvId].addTask(goal, path);
             map.setGridReserved(path.slice(0, path.length - 1));
             log.info(["current reserve grid: ", map.getReserveGrid()]);
-            path = path.map(node => ([node[0] - start.x, node[1] - start.y]));
+            // path = path.map(node => ([node[0] - start.x, node[1] - start.y]));
             let NewMsg = {
               type: 'path',
               data: {

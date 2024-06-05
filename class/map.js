@@ -4,8 +4,8 @@ class map{
  //19 x 16
     constructor(){
         this.map = {};
-        this.width = 5;
-        this.height = 7;
+        this.width = 6;
+        this.height = 8;
         this.initMap();
         this.setObstacles(obs);
         this.prev = [];
