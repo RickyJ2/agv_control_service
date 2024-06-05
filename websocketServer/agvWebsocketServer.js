@@ -24,7 +24,7 @@ agvServer.on('connection', function connection(ws, request, client) {
     ws.on('message', function incoming(message) {
         try{
             let msg = JSON.parse(message.toString());
-            route.call(msg.type, {data: msg.data, agvId: userId});
+            route.call(msg.type, {data: msg?.data, agvId: userId});
         }catch(err){
             log.error([err]);
         }
