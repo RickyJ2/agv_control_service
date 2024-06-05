@@ -1,3 +1,7 @@
+
+
+const hexHeight = 350;
+
 class Hex{
     constructor(x, y){
         this.x = x;
@@ -54,4 +58,42 @@ function hexDistance(dx, dy){
     return (Math.abs(dx) + Math.abs(dy) + Math.abs(-dx-dy)) / 2;
 }
 
-export { Hex, hexDirections, hexDistance };
+function hexRound(fracHex){
+    let q = Math.round(fracHex.x);
+    let r = Math.round(fracHex.y);
+    let s = Math.round(fracHex.z);
+    let qDiff = Math.abs(q - fracHex.x);
+    let rDiff = Math.abs(r - fracHex.y);
+    let sDiff = Math.abs(s - fracHex.z);
+    if(qDiff > rDiff && qDiff > sDiff){
+        q = -r - s;
+    } else if(rDiff > sDiff){
+        r = -q - s;
+    } else {
+        s = -q - r;
+    }
+    return new Hex(q, r);
+}
+
+function axialToXY(hex){
+    let x = hexHeight * (Math.sqrt(3) * hex.x + Math.sqrt(3)/2.0 * hex.y);
+    let y = hexHeight * 3.0/2 * hex.y;
+    x = Math.round(x);
+    y = Math.round(y);
+    return {x, y}
+}
+
+function xyToAxial(x, y){
+    let q = (Math.sqrt(3)/3 * x - 1.0/3 * y) / hexHeight;
+    let r = 2.0/3 * y / hexHeight;
+    return hexRound(new Hex(q, r));
+}
+
+export { 
+    Hex, 
+    hexDirections, 
+    hexDistance, 
+    hexRound, 
+    axialToXY, 
+    xyToAxial
+};

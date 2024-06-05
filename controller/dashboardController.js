@@ -1,5 +1,6 @@
 import {log, listAGVClient, listDashboardClient, map, finder} from '../config.js';
 import {notifyAGV, notifyDashboard, sendMap} from '../websocketServer/util.js';
+import { Hex, axialToXY } from '../class/hex.js';
 
 //When socket error occured
 function onSocketError(err) {
@@ -23,9 +24,10 @@ function onConnection(ws, request){
 }
 //When dashboard connection closed
 function onSocketClose(ws, request) {
-    listDashboardClient = listDashboardClient.filter(function(client) {
-        return client !== ws;
-    });
+    let index = listDashboardClient.indexOf(ws);
+    if(index != -1){
+        listDashboardClient.splice(index, 1);
+    }
     log.info(['Dashboard disconnected']);
 }
 //Receive task from dashboard, notify to AGV
@@ -56,11 +58,14 @@ function receiveTask({data}){
     map.setGridReserved(path.slice(0, path.length - 1));
     log.info(["current reserve grid: ", map.getReserveGrid()]);
     // path = path.map(node => ([node[0] - start.x, node[1] - start.y]));
+    //convert path to xy coordinate system
+    path = path.map(node => axialToXY(new Hex(node[0], node[1])));
+    goal = axialToXY(goal);
     let NewMsg = {
         type: 'path',
         data: {
-        "path": path,
-        "goal": goal
+            "path": path,
+            "goal": goal
         }
     }
     notifyAGV(JSON.stringify(NewMsg), agvId);
