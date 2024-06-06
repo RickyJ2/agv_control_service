@@ -1,12 +1,11 @@
 import {Hex, hexDirections, hexDistance} from './hex.js';
-import {listObs} from "../config.js";
 
 class map{
  //19 x 16
-    constructor(){
+    constructor({width = 6, height = 8, listObs = []}){
         this.map = {};
-        this.width = 6;
-        this.height = 8;
+        this.width = width;
+        this.height = height;
         this.initMap();
         this.setObstacles(listObs);
         this.prev = [];
