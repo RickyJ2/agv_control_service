@@ -1,4 +1,5 @@
 const hexHeight = 350;
+const hexSize = hexHeight/2;
 
 class Hex{
     constructor(x, y){
@@ -74,16 +75,16 @@ function hexRound(fracHex){
 }
 
 function axialToXY(hex){
-    let x = hexHeight * (Math.sqrt(3) * hex.x + Math.sqrt(3)/2.0 * hex.y);
-    let y = hexHeight * 3.0/2 * hex.y;
+    let x = hexSize * (Math.sqrt(3) * hex.x + Math.sqrt(3)/2.0 * hex.y);
+    let y = hexSize * 3.0/2 * hex.y;
     x = Math.round(x);
     y = Math.round(y);
     return {x, y}
 }
 
 function xyToAxial(x, y){
-    let q = (Math.sqrt(3)/3 * x - 1.0/3 * y) / hexHeight;
-    let r = 2.0/3 * y / hexHeight;
+    let q = (Math.sqrt(3)/3 * x - 1.0/3 * y) / hexSize;
+    let r = 2.0/3 * y / hexSize;
     return hexRound(new Hex(q, r));
 }
 

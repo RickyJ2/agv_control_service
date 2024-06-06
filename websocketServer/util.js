@@ -4,6 +4,7 @@ import { Hex, axialToXY } from '../class/hex.js';
 
 function sendAGVPosition(agvId){
   let posHex = new Hex(listAGVClient[agvId].position.x, listAGVClient[agvId].position.y);
+  log.debug([axialToXY(posHex)]);
   let msg = {
       type: 'position',
       data: axialToXY(posHex)

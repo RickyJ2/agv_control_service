@@ -51,7 +51,7 @@ class map{
             .map(neighbor => this.map[neighbor.key()].clone());
     }
     clone(){
-        const newMap = new map();
+        const newMap = new map({width: this.width, height: this.height, listObs: []});
         newMap.map = Object.assign({}, this.map);
         return newMap;
     }
