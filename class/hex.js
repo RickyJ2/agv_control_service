@@ -1,5 +1,3 @@
-
-
 const hexHeight = 350;
 
 class Hex{
