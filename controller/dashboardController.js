@@ -41,7 +41,7 @@ function receiveTask({data}){
         let index = listAGVClient[agvId].listGoalPoint.length - 1;
         start = map.getHexAt(listAGVClient[agvId].listGoalPoint[index].x, listAGVClient[agvId].listGoalPoint[index].y);
     }
-    log.info(["when generating path: ", start.toString(), " to ", goal])
+    log.info(["Generating path: ", start.toString(), " to ", goal])
     let end = map.getHexAt(goal.x, goal.y);
     if(end == null){
         log.info(["goal is invalid"]);
@@ -52,14 +52,12 @@ function receiveTask({data}){
         log.info(["no path found"]);
         return;
     }
-    log.info(["generated path: ", path]);
     path.shift(); //remove start point
     listAGVClient[agvId].addTask(goal, path);
     map.setGridReserved(path.slice(0, path.length - 1));
-    log.info(["current reserve grid: ", map.getReserveGrid()]);
-    // path = path.map(node => ([node[0] - start.x, node[1] - start.y]));
     //convert path to xy coordinate system
     path = path.map(node => axialToXY(new Hex(node[0], node[1])));
+    log.info(["generated path: ", path]);
     goal = axialToXY(goal);
     let NewMsg = {
         type: 'path',
