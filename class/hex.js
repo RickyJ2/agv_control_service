@@ -76,7 +76,7 @@ function hexRound(fracHex){
 
 function axialToXY(hex){
     let x = hexSize * (Math.sqrt(3) * hex.x + Math.sqrt(3)/2.0 * hex.y);
-    let y = hexSize * 3.0/2 * hex.y;
+    let y = hexSize * 3.0/2 * hex.y * -1;
     x = Math.round(x);
     y = Math.round(y);
     return {x, y}
