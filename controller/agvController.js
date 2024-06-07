@@ -29,9 +29,6 @@ function updatePosition({data, agvId}){
     if (listAGVClient[agvId].listPath.length == 0) return;
     if (listAGVClient[agvId].listPath[0].length == 0) return;
     let point = listAGVClient[agvId].listPath[0].shift();
-    // listAGVClient[agvId].setPosition(point[0], point[1]);
-    // log.info(["AGV updated Position: ", listAGVClient[agvId].position]); 
-    // sendAGVPosition(agvId);
     if(listAGVClient[agvId].listPath[0].length == 0){
         listAGVClient[agvId].listPath.shift();
         listAGVClient[agvId].listGoalPoint.shift();
