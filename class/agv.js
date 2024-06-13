@@ -37,7 +37,7 @@ class AGV {
             power: this.power,
             orientation: this.orientation,
             position: this.position,
-            speed: this.speed,
+            velocity: this.speed,
             paths: this.listPath
         }
     }
