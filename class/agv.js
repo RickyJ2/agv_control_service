@@ -4,7 +4,7 @@ class AGV {
         this.container = false;
         this.power = 100;
         this.orientation = 0;
-        this.speed = 0;
+        this.velocity = 0;
 
         this.position = position;
         this.ws = null;
@@ -20,7 +20,7 @@ class AGV {
         this.container = data.container;
         this.power = data.power;
         this.orientation = data.orientation;
-        this.speed = data.speed;
+        this.velocity = data.velocity;
         this.position = data.position;
     }
     setWs(ws) {
@@ -37,7 +37,7 @@ class AGV {
             power: this.power,
             orientation: this.orientation,
             position: this.position,
-            velocity: this.speed,
+            velocity: this.velocity,
             paths: this.listPath
         }
     }
