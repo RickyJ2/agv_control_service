@@ -76,7 +76,7 @@ function hexRound(fracHex){
 
 function handleMinusZero(val){
     if(val == 0){
-        return 0
+        return 0;
     }
     return val
 }
@@ -92,8 +92,10 @@ function axialToXY(hex){
 }
 
 function xyToAxial(x, y){
-    let q = (Math.sqrt(3)/3 * x - 1.0/3 * y) / hexSize;
-    let r = 2.0/3 * y / hexSize;
+    let q = (x + Math.sqrt(3) * y / 3.0) / (hexSize * Math.sqrt(3)); 
+    let r = -2.0 / 3 * y / hexSize;
+    q = Math.round(q);
+    r = Math.round(r);
     q = handleMinusZero(q)
     r = handleMinusZero(r)
     return hexRound(new Hex(q, r));
