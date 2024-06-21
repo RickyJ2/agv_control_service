@@ -9,8 +9,8 @@ const listObs = [
     [5, -2],
     [4, -2],
     [3, -2],
-    [2,-4],
-    [3,-4],
+    [2, -4],
+    [3, -4],
     [4, -4],
 
     // [1,-2],
@@ -22,7 +22,7 @@ const log = new logging();
 //List of AGV: ID, start Position in axial coordinate system
 const listAGVClient = {
     '1': new AGV(1, {x: 0, y: 0}),
-    '2': new AGV(2, {x: 0, y: 0}),
+    '2': new AGV(2, {x: 1, y: 0}),
 };
 const listDashboardClient = [];
 const map = new Map({width: 6, height: 8, listObs: listObs});
