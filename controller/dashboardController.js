@@ -41,7 +41,7 @@ function receiveTask({data}){
         let index = listAGVClient[agvId].listGoalPoint.length - 1;
         start = map.getHexAt(listAGVClient[agvId].listGoalPoint[index].x, listAGVClient[agvId].listGoalPoint[index].y);
     }
-    log.info(["Generating path: ", start.toString(), " to ", goal])
+    log.info(["Generating path: ", start, " to ", goal])
     let end = map.getHexAt(goal.x, goal.y);
     if(end == null){
         log.info(["goal is invalid"]);

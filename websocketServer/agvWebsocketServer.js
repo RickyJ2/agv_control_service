@@ -1,5 +1,5 @@
 import { WebSocketServer } from 'ws';
-import {onSocketError, onConnection, onSocketClose, updateState, updatePosition} from '../controller/agvController.js';
+import {onSocketError, onConnection, onSocketClose, updateState, updatePosition, handleCollision} from '../controller/agvController.js';
 import Route from '../class/route.js';
 import {log} from '../config.js';
 
@@ -9,6 +9,7 @@ const route = new Route();
 //Define every route on message receive
 route.on('state', updateState);
 route.on('notif', updatePosition);
+route.on('collision', handleCollision);
 //Upgrade http request to websocket
 function onUpgrade({request, socket, head}){
     agvServer.handleUpgrade(request, socket, head, ws => {

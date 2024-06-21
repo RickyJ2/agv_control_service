@@ -1,6 +1,6 @@
-import {log, listAGVClient, map} from '../config.js';
-import {sendAGVPosition} from '../websocketServer/util.js';
-import { xyToAxial } from '../class/hex.js';
+import {log, listAGVClient, map, finder} from '../config.js';
+import {notifyAGV, sendAGVPosition, sendMapToAll} from '../websocketServer/util.js';
+import { xyToAxial, axialToXY, Hex } from '../class/hex.js';
 
 function onSocketError(err) {
     log.error([err]);
@@ -37,11 +37,41 @@ function updatePosition({data, agvId}){
     log.info(["reached point: ", point]);
 }
 
+function handleCollision({data, agvId}){
+    let obsInHex = data.map(obs => xyToAxial(obs.x, obs.y));
+    map.setObstacles(obsInHex);
+    sendMapToAll()
+    let start = map.getHexAt(listAGVClient[agvId].position.x, listAGVClient[agvId].position.y);
+    let end = map.getHexAt(listAGVClient[agvId].listGoalPoint[0].x, listAGVClient[agvId].listGoalPoint[0].y);
+    let path = finder.findPath(start.x, start.y, end.x, end.y, map.clone());
+    if(path.length == 0){
+        log.info(["no path found"]);
+        return;
+    }
+    path.shift(); //remove start point
+    //unreserved old path
+    map.setGridUnreserved(listAGVClient[agvId].listPath[0]);
+    listAGVClient[agvId].listPath.shift();
+    listAGVClient[agvId].listPath.unshift(path);
+    map.setGridReserved(path.slice(0, path.length - 1));
+    //convert path to xy coordinate system
+    path = path.map(node => axialToXY(new Hex(node[0], node[1])));
+    log.info(["generated path: ", path]);
+    let NewMsg = {
+        type: 'newPath',
+        data: {
+            "path": path
+        }
+    }
+    notifyAGV(JSON.stringify(NewMsg), agvId);
+}
+
 export {
     onSocketError,
     onConnection,
     onSocketClose,
 
     updateState,
-    updatePosition
+    updatePosition,
+    handleCollision
 }

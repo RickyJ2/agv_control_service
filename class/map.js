@@ -34,7 +34,7 @@ class map{
     }
     setObstacles(obstacles){
         obstacles.forEach(obstacle => {
-            this.addObstacle(obstacle[0], obstacle[1]);
+            this.addObstacle(obstacle.x, obstacle.y);
         });
     }
     getObstacles(){
