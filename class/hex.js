@@ -7,7 +7,6 @@ class Hex{
         this.y = y;
         this.z = -x - y;
         this.walkable = true;
-        this.reserve = false;
         this.parent = null;
     }
     key(){

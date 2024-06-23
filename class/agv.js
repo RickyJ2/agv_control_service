@@ -1,3 +1,5 @@
+import { Hex } from './hex.js';
+
 class AGV {
     constructor(id, position) {
         this.id = id;
@@ -27,7 +29,7 @@ class AGV {
         this.ws = ws;
     }
     setPosition(x, y) {
-        this.position = {x: x, y: y };
+        this.position = new Hex(x, y);
     }
     getState(){
         return {

@@ -13,7 +13,7 @@ function onConnection(ws, request){
     sendAGVPosition(agvId);
 }
 
-function onSocketClose(ws, request) {
+function onSocketClose(_, request) {
     const agvId = request.headers['id'];
     listAGVClient[agvId].setWs(null);
     log.info(['AGV ' + agvId + ' disconnected']);
@@ -25,7 +25,7 @@ function updateState({data, agvId}){
     listAGVClient[agvId].updateState(data);
 }
 
-function updatePosition({data, agvId}){
+function updatePosition({agvId}){
     if (listAGVClient[agvId].listPath.length == 0) return;
     if (listAGVClient[agvId].listPath[0].length == 0) return;
     let point = listAGVClient[agvId].listPath[0].shift();
@@ -33,8 +33,7 @@ function updatePosition({data, agvId}){
         listAGVClient[agvId].listPath.shift();
         listAGVClient[agvId].listGoalPoint.shift();
     }
-    map.setGridUnreserved([point]);
-    log.info(["reached point: ", point]);
+    log.info(["AGV ", agvId, " reached point: ", point]);
 }
 
 function handleCollision({data, agvId}){
@@ -49,11 +48,9 @@ function handleCollision({data, agvId}){
         return;
     }
     path.shift(); //remove start point
-    //unreserved old path
-    map.setGridUnreserved(listAGVClient[agvId].listPath[0]);
+    //remove old path and add new path
     listAGVClient[agvId].listPath.shift();
     listAGVClient[agvId].listPath.unshift(path);
-    map.setGridReserved(path.slice(0, path.length - 1));
     //convert path to xy coordinate system
     path = path.map(node => axialToXY(new Hex(node[0], node[1])));
     log.info(["generated path: ", path]);

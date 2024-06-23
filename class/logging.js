@@ -1,6 +1,5 @@
 class logging {
-    constructor() {
-    }
+    constructor() {}
 
     print(msg, type){
         //print message to console with template DD:MM:YYYY HH:MM:SS:MS

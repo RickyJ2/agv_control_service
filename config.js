@@ -3,19 +3,16 @@ import Map from './class/map.js';
 import aStarFinder from './class/aStarFinder.js';
 import logging from './class/logging.js';
 
-//fill with format [x,y] where the obstacle is located based on axial coordinate system
+const PORT = 8080;
+//fill with format {x: int, y: int} where the obstacle is located based on axial coordinate system
 //look https://www.redblobgames.com/grids/hexagons/#coordinates
 const listObs = [
-    [5, -2],
-    [4, -2],
-    [3, -2],
-    [2, -4],
-    [3, -4],
-    [4, -4],
-
-    // [1,-2],
-    // [2,0],
-    // [0,0]
+    {x: 5, y: -2},
+    {x: 4, y: -2},
+    {x: 3, y: -2},
+    {x: 2, y: -4},
+    {x: 3, y: -4},
+    {x: 4, y: -4},
 ];
 
 const log = new logging();
@@ -29,6 +26,7 @@ const map = new Map({width: 6, height: 8, listObs: listObs});
 const finder = new aStarFinder();
 
 export {
+    PORT,
     log,
     listAGVClient,
     listDashboardClient,

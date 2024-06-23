@@ -7,7 +7,7 @@ function onSocketError(err) {
     log.error([err]);
 }
 //When dashboard connected run only once
-function onConnection(ws, request){
+function onConnection(ws, _){
     listDashboardClient.push(ws);
     log.info(['Dashboard connected']);
     sendMap(ws);
@@ -23,7 +23,7 @@ function onConnection(ws, request){
     }, 1000); 
 }
 //When dashboard connection closed
-function onSocketClose(ws, request) {
+function onSocketClose(ws, _) {
     let index = listDashboardClient.indexOf(ws);
     if(index != -1){
         listDashboardClient.splice(index, 1);
@@ -54,7 +54,6 @@ function receiveTask({data}){
     }
     path.shift(); //remove start point
     listAGVClient[agvId].addTask(goal, path);
-    map.setGridReserved(path.slice(0, path.length - 1));
     //convert path to xy coordinate system
     path = path.map(node => axialToXY(new Hex(node[0], node[1])));
     log.info(["generated path: ", path]);

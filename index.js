@@ -1,10 +1,9 @@
 import { createServer } from 'http';
 import { onUpgrade as agvOnUpgrade } from './websocketServer/agvWebsocketServer.js';
 import { onUpgrade as dashboardOnUpgrade } from './websocketServer/dashboardWebsocketServer.js';
-import { log } from './config.js';
+import { log, PORT } from './config.js';
 import Route from "./class/route.js";
 
-const PORT = 8080;
 const route = new Route();
 const server = createServer();
 

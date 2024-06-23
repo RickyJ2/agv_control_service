@@ -1,7 +1,6 @@
-import {Hex, hexDirections, hexDistance} from './hex.js';
+import {Hex, hexDirections} from './hex.js';
 
 class map{
- //19 x 16
     constructor({width = 6, height = 8, listObs = []}){
         this.map = {};
         this.width = width;
@@ -54,21 +53,6 @@ class map{
         const newMap = new map({width: this.width, height: this.height, listObs: []});
         newMap.map = Object.assign({}, this.map);
         return newMap;
-    }
-    getReserveGrid(){
-        return Object.values(this.map).filter(hex => hex.reserve).map(hex => ({x: hex.x, y: hex.y}));
-    }
-    setGridReserved(listPoint){
-        for(let point of listPoint){
-            const hex = this.getHexAt(point[0], point[1]);
-            this.map[hex.key()].reserve = true;
-        }
-    }
-    setGridUnreserved(listPoint){
-        for(let point of listPoint){
-            const hex = this.getHexAt(point[0], point[1]);
-            this.map[hex.key()].reserve = false;
-        }
     }
 }
 
