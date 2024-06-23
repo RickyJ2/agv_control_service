@@ -50,7 +50,7 @@ class AGV {
             container: this.container,
             power: this.power,
             position: this.position,
-            tasks: Math.floor(this.listPath.length/2)
+            tasks: this.listPath.length
         }
     }
     isOnline(){
