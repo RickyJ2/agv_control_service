@@ -1,5 +1,5 @@
 import {log, listAGVClient, map, finder} from '../config.js';
-import {notifyAGV, sendAGVPosition, sendMapToAll} from '../websocketServer/util.js';
+import {notifyAGV, notifyBackend, sendAGVPosition, sendMapToAll} from '../websocketServer/util.js';
 import { xyToAxial, axialToXY, Hex } from '../class/hex.js';
 
 function onSocketError(err) {
@@ -32,6 +32,13 @@ function updatePosition({agvId}){
     if(listAGVClient[agvId].listPath[0].length == 0){
         listAGVClient[agvId].listPath.shift();
         listAGVClient[agvId].listGoalPoint.shift();
+        let msg = {
+            "type": "notif",
+            "data":{
+                "id": agvId
+            }
+        }
+        notifyBackend(JSON.stringify(msg));
     }
     log.info(["AGV ", agvId, " reached point: ", point]);
 }
