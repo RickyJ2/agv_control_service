@@ -1,4 +1,4 @@
-import {log, listAGVClient, listDashboardClient, map} from '../config.js';
+import {log, listAGVClient, listDashboardClient, listBackendClient, map} from '../config.js';
 import WebSocket from 'ws';
 import { Hex, axialToXY } from '../class/hex.js';
 
@@ -41,6 +41,15 @@ function notifyDashboard(message){
   });
 }
 
+function notifyBackend(message){
+  //broadcast to all Dashboard
+  listBackendClient.forEach(function each(client) {
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(message);
+    }
+  });
+}
+
 function sendMapToAll(){
   listDashboardClient.forEach(function each(client) {
     if (client.readyState === WebSocket.OPEN) {
@@ -65,6 +74,7 @@ export {
   sendAGVPosition,
   notifyAGV,
   notifyDashboard,
+  notifyBackend,
   sendMapToAll,
   sendMap
 }

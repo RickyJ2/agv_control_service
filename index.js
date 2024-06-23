@@ -1,6 +1,7 @@
 import { createServer } from 'http';
 import { onUpgrade as agvOnUpgrade } from './websocketServer/agvWebsocketServer.js';
 import { onUpgrade as dashboardOnUpgrade } from './websocketServer/dashboardWebsocketServer.js';
+import { onUpgrade as backendOnUpgrade } from './websocketServer/backendWebsocketServer.js';
 import { log, PORT } from './config.js';
 import Route from "./class/route.js";
 
@@ -10,6 +11,7 @@ const server = createServer();
 //define the route
 route.on('/agv', agvOnUpgrade);
 route.on('/dashboard', dashboardOnUpgrade);
+route.on('/backend', backendOnUpgrade);
 //handle invalid url
 route.onUndefined(function({request, socket}){
     socket.write('HTTP/1.1 404 Bad Request\r\n\r\n');

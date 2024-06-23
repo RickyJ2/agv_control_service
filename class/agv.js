@@ -43,6 +43,16 @@ class AGV {
             paths: this.listPath
         }
     }
+    getStateBackend(){
+        return {
+            id: this.id,
+            isOnline: this.isOnline(),
+            container: this.container,
+            power: this.power,
+            position: this.position,
+            tasks: Math.floor(this.listPath.length/2)
+        }
+    }
     isOnline(){
         return this.ws != null;
     }

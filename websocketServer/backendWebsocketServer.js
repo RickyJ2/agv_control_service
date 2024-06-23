@@ -1,21 +1,21 @@
 import { WebSocketServer } from 'ws';
-import { onConnection, onSocketError, onSocketClose, sendingMap } from '../controller/dashboardController.js';
+import { onConnection, onSocketError, onSocketClose, receiveTask } from '../controller/backendController.js';
 import Route from '../class/route.js';
 import {log} from '../config.js';
 
-const dashboardServer = new WebSocketServer({noServer: true, path: '/dashboard'});
+const backendServer = new WebSocketServer({noServer: true, path: '/backend'});
 const route = new Route();
 
 //Define every route on message receive
-route.on('map', sendingMap);
+route.on('task', receiveTask);
 //Upgrade http request to websocket
 function onUpgrade({request, socket, head}){
-    dashboardServer.handleUpgrade(request, socket, head, ws => {
-        dashboardServer.emit('connection', ws, request);
+    backendServer.handleUpgrade(request, socket, head, ws => {
+        backendServer.emit('connection', ws, request);
     });
 }
 //When dashboard connected
-dashboardServer.on('connection', function connection(ws, request, client) {
+backendServer.on('connection', function connection(ws, request, client) {
     //Only run once when dashboard connected
     onConnection(ws, request);
     //when receive message
@@ -37,5 +37,5 @@ dashboardServer.on('connection', function connection(ws, request, client) {
 
 export {
     onUpgrade,
-    dashboardServer
+    backendServer
 }
