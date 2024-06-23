@@ -22,6 +22,7 @@ const listAGVClient = {
     '2': new AGV(2, {x: 1, y: 0}),
 };
 const listDashboardClient = [];
+const listBackendClient = [];
 const map = new Map({width: 6, height: 8, listObs: listObs});
 const finder = new aStarFinder();
 
@@ -30,6 +31,7 @@ export {
     log,
     listAGVClient,
     listDashboardClient,
+    listBackendClient,
     map,
     finder,
     listObs
