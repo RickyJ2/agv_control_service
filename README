@@ -1,3 +1,6 @@
 1. Run "npm install" to make sure all depedencies installed
 2. Run "npm run dev" to run the server with nodemon
 2. Run "npm run start" to run the server without nodemon
+
+//run this command to ignore update of config.js and rerun this cmd to retrack the changes
+git update-index --no-assume-unchanged config.js
