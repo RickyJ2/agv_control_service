@@ -7,7 +7,6 @@ class map{
         this.height = height;
         this.initMap();
         this.setObstacles(listObs);
-        this.prev = [];
     }
     initMap(){
         for(let y = (-1*this.height) + 1; y <= 0; y++){
