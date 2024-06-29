@@ -11,12 +11,17 @@ class AGV {
         this.position = position;
         this.ws = null;
 
+        this.listTaskCode = [];
         this.listGoalPoint = [];
         this.listPath = [];
     }
-    addTask(goalPoint, path){
+    addTask(taskCode, startPoint, goalPoint, pathStart, pathGoal){
+        this.listTaskCode.push({"code": taskCode, "type": "NotifStart"});
+        this.listTaskCode.push({"code": taskCode, "type": "NotifEnd"});
+        this.listGoalPoint.push(startPoint);
         this.listGoalPoint.push(goalPoint);
-        this.listPath.push(path);
+        this.listPath.push(pathStart);
+        this.listPath.push(pathGoal);
     }
     updateState(data){
         this.container = data.container;
@@ -50,7 +55,7 @@ class AGV {
             container: this.container,
             power: this.power,
             position: this.position,
-            tasks: this.listPath.length
+            tasks: Math.floor(this.listTaskCode.length/2)
         }
     }
     isOnline(){

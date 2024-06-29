@@ -7,12 +7,12 @@ const PORT = 8080;
 //fill with format {x: int, y: int} where the obstacle is located based on axial coordinate system
 //look https://www.redblobgames.com/grids/hexagons/#coordinates
 const listObs = [
-    {x: 5, y: -2},
-    {x: 4, y: -2},
-    {x: 3, y: -2},
-    {x: 2, y: -4},
-    {x: 3, y: -4},
-    {x: 4, y: -4},
+    // {x: 5, y: -2},
+    // {x: 4, y: -2},
+    // {x: 3, y: -2},
+    // {x: 2, y: -4},
+    // {x: 3, y: -4},
+    // {x: 4, y: -4},
 ];
 
 const log = new logging();

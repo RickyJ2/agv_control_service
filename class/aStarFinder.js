@@ -54,7 +54,6 @@ class aStarFinder{
         }
         return [];
     }
-
 }
 
 export default aStarFinder;

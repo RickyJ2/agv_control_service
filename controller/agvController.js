@@ -32,10 +32,12 @@ function updatePosition({agvId}){
     if(listAGVClient[agvId].listPath[0].length == 0){
         listAGVClient[agvId].listPath.shift();
         listAGVClient[agvId].listGoalPoint.shift();
+        let taskCode = listAGVClient[agvId].listTaskCode.shift();
         let msg = {
-            "type": "notif",
+            "type": taskCode.type,
             "data":{
-                "id": agvId
+                "id_agv": agvId,
+                "task_code": taskCode.code
             }
         }
         notifyBackend(JSON.stringify(msg));
