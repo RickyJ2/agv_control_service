@@ -10,16 +10,16 @@ function onSocketError(err) {
 function onConnection(ws, _){
     listBackendClient.push(ws);
     log.info(['Backend connected']);
-    // setInterval(function(){
-    //     let msg = {
-    //       type: 'update',
-    //       data: [
-    //         listAGVClient['1'].getStateBackend(),
-    //         listAGVClient['2'].getStateBackend()
-    //       ]
-    //     }
-    //     notifyBackend(JSON.stringify(msg));
-    // }, 1000); 
+    setInterval(function(){
+        let msg = {
+          type: 'update',
+          data: [
+            listAGVClient['1'].getStateBackend(),
+            listAGVClient['2'].getStateBackend()
+          ]
+        }
+        notifyBackend(JSON.stringify(msg));
+    }, 1000); 
 }
 //When Backend connection closed
 function onSocketClose(ws, _) {
