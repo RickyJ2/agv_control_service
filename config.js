@@ -3,7 +3,7 @@ import Map from './class/map.js';
 import aStarFinder from './class/aStarFinder.js';
 import logging from './class/logging.js';
 
-const PORT = 8080;
+const PORT = 80;
 //fill with format {x: int, y: int} where the obstacle is located based on axial coordinate system
 //look https://www.redblobgames.com/grids/hexagons/#coordinates
 const listObs = [

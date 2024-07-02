@@ -54,6 +54,7 @@ class AGV {
             isOnline: this.isOnline(),
             container: this.container,
             power: this.power,
+            velocity: this.velocity,
             position: this.position,
             tasks: Math.floor(this.listTaskCode.length/2)
         }
