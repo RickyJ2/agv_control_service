@@ -19,11 +19,11 @@ class AGV {
         this.listPath.push(path);
     }
     updateState(data){
-        this.container = data.container;
-        this.power = data.power;
-        this.orientation = data.orientation;
-        this.velocity = data.velocity;
-        this.position = data.position;
+        this.container = data.container ?? this.container;
+        this.power = data.power ?? this.power;
+        this.orientation = data.orientation ?? this.orientation;
+        this.velocity = data.velocity ?? this.velocity;
+        this.position = data.position ?? this.position;
     }
     setWs(ws) {
         this.ws = ws;
