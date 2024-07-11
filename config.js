@@ -19,10 +19,10 @@ const log = new logging();
 //List of AGV: ID, start Position in axial coordinate system
 const listAGVClient = {
     '1': new AGV(1, {x: 0, y: 0}),
-    '2': new AGV(2, {x: 1, y: 0}),
+    '2': new AGV(2, {x: 6, y: 0}),
 };
 const listDashboardClient = [];
-const map = new Map({width: 6, height: 8, listObs: listObs});
+const map = new Map({width: 7, height: 7, listObs: listObs});
 const finder = new aStarFinder();
 
 export {

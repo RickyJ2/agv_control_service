@@ -38,8 +38,11 @@ function updatePosition({agvId}){
 
 function handleCollision({data, agvId}){
     let obsInHex = data.map(obs => xyToAxial(obs.x, obs.y));
+    obsInHex = obsInHex.filter((obs, index, self) => self.findIndex(t => t.x === obs.x && t.y === obs.y) === index);
     map.setObstacles(obsInHex);
+    log.info(["Obstacle detected at: ", obsInHex])
     sendMapToAll()
+    log.info(["Regenerate new Path"]);
     let start = map.getHexAt(listAGVClient[agvId].position.x, listAGVClient[agvId].position.y);
     let end = map.getHexAt(listAGVClient[agvId].listGoalPoint[0].x, listAGVClient[agvId].listGoalPoint[0].y);
     let path = finder.findPath(start.x, start.y, end.x, end.y, map.clone());
@@ -47,19 +50,19 @@ function handleCollision({data, agvId}){
         log.info(["no path found"]);
         return;
     }
-    path.shift(); //remove start point
-    //remove old path and add new path
-    listAGVClient[agvId].listPath.shift();
-    listAGVClient[agvId].listPath.unshift(path);
     //convert path to xy coordinate system
-    path = path.map(node => axialToXY(new Hex(node[0], node[1])));
+    let pathXY = path.map(node => axialToXY(new Hex(node[0], node[1])));
     log.info(["generated path: ", path]);
     let NewMsg = {
         type: 'newPath',
         data: {
-            "path": path
+            "path": pathXY
         }
     }
+    path.shift(); //remove start point
+    //remove old path and add new path
+    listAGVClient[agvId].listPath.shift();
+    listAGVClient[agvId].listPath.unshift(path);
     notifyAGV(JSON.stringify(NewMsg), agvId);
 }
 

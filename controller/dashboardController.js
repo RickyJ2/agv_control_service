@@ -52,19 +52,19 @@ function receiveTask({data}){
         log.info(["no path found"]);
         return;
     }
-    path.shift(); //remove start point
-    listAGVClient[agvId].addTask(goal, path);
     //convert path to xy coordinate system
-    path = path.map(node => axialToXY(new Hex(node[0], node[1])));
+    let pathXY = path.map(node => axialToXY(new Hex(node[0], node[1])));
     log.info(["generated path: ", path]);
-    goal = axialToXY(goal);
+    let goalXY = axialToXY(goal);
     let NewMsg = {
         type: 'path',
         data: {
-            "path": path,
-            "goal": goal
+            "path": pathXY,
+            "goal": goalXY
         }
     }
+    path.shift(); //remove start point
+    listAGVClient[agvId].addTask(goal, path);
     notifyAGV(JSON.stringify(NewMsg), agvId);
 }
 //Send map to dashboard
