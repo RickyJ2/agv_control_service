@@ -14,6 +14,15 @@ class AGV {
         this.listGoalPoint = [];
         this.listPath = [];
     }
+    resetAllData(){
+        this.ws = null
+        this.container = false;
+        this.power = 100;
+        this.orientation = 0;
+        this.velocity = 0;
+        this.listGoalPoint = [];
+        this.listPath = [];
+    }
     addTask(goalPoint, path){
         this.listGoalPoint.push(goalPoint);
         this.listPath.push(path);

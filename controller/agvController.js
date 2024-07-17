@@ -8,7 +8,7 @@ function onSocketError(err) {
 
 function onConnection(ws, request){
     const agvId = request.headers['id'];
-    listAGVClient[agvId].setWs(ws);
+    listAGVClient[agvId].resetAllData();
     log.info(['AGV ' + agvId + ' connected']);
     sendAGVPosition(agvId);
 }
