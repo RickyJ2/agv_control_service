@@ -8,14 +8,14 @@ function onSocketError(err) {
 
 function onConnection(ws, request){
     const agvId = request.headers['id'];
-    listAGVClient[agvId].resetAllData();
+    listAGVClient[agvId].setWs(ws);
     log.info(['AGV ' + agvId + ' connected']);
     sendAGVPosition(agvId);
 }
 
 function onSocketClose(_, request) {
     const agvId = request.headers['id'];
-    listAGVClient[agvId].setWs(null);
+    listAGVClient[agvId].resetAllData();
     log.info(['AGV ' + agvId + ' disconnected']);
 }
 
