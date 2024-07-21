@@ -47,7 +47,7 @@ function updatePosition({agvId}){
             }
         }
         notifyBackend(JSON.stringify(msg));
-        log.info([msg]);
+        log.info(["AGV ", agvId, " finished task: ", taskCode.code]);
     }
     log.info(["AGV ", agvId, " reached point: ", point]);
 }
