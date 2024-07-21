@@ -48,14 +48,30 @@ function receiveTask({data}){
         log.info(["start or goal is invalid"]);
         return;
     }
-    let pathStart = finder.findPath(agvPos.x, agvPos.y, startHex.x, startHex.y, map.clone());
-    let pathGoal = finder.findPath(startHex.x, startHex.y, goalHex.x, goalHex.y, map.clone());
-    if(pathStart.length == 0 || pathGoal.length == 0){
-        log.info(["no path found"]);
-        return;
+    //check if last AGV position and start position is the same
+    let pathStart = [];
+    let pathGoal = [];
+    if(agvPos.x == startHex.x && agvPos.y == startHex.y){
+        pathStart.push([startHex.x, startHex.y]);
+    }else{
+        pathStart = finder.findPath(agvPos.x, agvPos.y, startHex.x, startHex.y, map.clone());
+        if(pathStart.length == 0){
+            log.info(["no path to start point found"]);
+            return;
+        }
+        pathStart.shift(); //remove current position
     }
-    pathStart.shift(); //remove start point
-    pathGoal.shift(); //remove start point
+    //check if start and goal is the same
+    if(startHex.x == goalHex.x && startHex.y == goalHex.y){
+        pathGoal.push([goalHex.x, goalHex.y]);
+    }else{
+        pathGoal = finder.findPath(startHex.x, startHex.y, goalHex.x, goalHex.y, map.clone());
+        if(pathGoal.length == 0){
+            log.info(["no path to goal point found"]);
+            return;
+        }
+        pathGoal.shift(); //remove start point
+    }
     listAGVClient[agvId].addTask(taskCode, start, goal, pathStart, pathGoal);
     //convert path to xy coordinate system
     pathStart = pathStart.map(node => axialToXY(new Hex(node[0], node[1])));

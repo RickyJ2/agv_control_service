@@ -30,6 +30,7 @@ function updatePosition({agvId}){
     if (listAGVClient[agvId].listPath[0].length == 0){
         listAGVClient[agvId].listPath.shift();
         listAGVClient[agvId].listGoalPoint.shift();
+        listAGVClient[agvId].listTaskCode.shift();
         log.info(["AGV ", agvId, " emptying..."]);
         return;
     };
