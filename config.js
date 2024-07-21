@@ -13,17 +13,21 @@ const listObs = [
     // {x: 2, y: -4},
     // {x: 3, y: -4},
     // {x: 4, y: -4},
+    {x: 3, y: 0},
+    {x: 4, y: -2},
+    {x: 5, y: -4},
+    {x: 6, y: -6}
 ];
 
 const log = new logging();
 //List of AGV: ID, start Position in axial coordinate system
 const listAGVClient = {
     '1': new AGV(1, {x: 0, y: 0}),
-    '2': new AGV(2, {x: 1, y: 0}),
+    '2': new AGV(2, {x: 6, y: 0}),
 };
 const listDashboardClient = [];
 const listBackendClient = [];
-const map = new Map({width: 6, height: 8, listObs: listObs});
+const map = new Map({width: 7, height: 7, listObs: listObs});
 const finder = new aStarFinder();
 
 export {
