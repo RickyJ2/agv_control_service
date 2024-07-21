@@ -27,7 +27,12 @@ function updateState({data, agvId}){
 
 function updatePosition({agvId}){
     if (listAGVClient[agvId].listPath.length == 0) return;
-    if (listAGVClient[agvId].listPath[0].length == 0) return;
+    if (listAGVClient[agvId].listPath[0].length == 0){
+        listAGVClient[agvId].listPath.shift();
+        listAGVClient[agvId].listGoalPoint.shift();
+        log.info(["AGV ", agvId, " emptying..."]);
+        return;
+    };
     let point = listAGVClient[agvId].listPath[0].shift();
     if(listAGVClient[agvId].listPath[0].length == 0){
         listAGVClient[agvId].listPath.shift();
@@ -41,6 +46,7 @@ function updatePosition({agvId}){
             }
         }
         notifyBackend(JSON.stringify(msg));
+        log.info([msg]);
     }
     log.info(["AGV ", agvId, " reached point: ", point]);
 }
